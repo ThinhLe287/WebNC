@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ hàng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            position: relative;
+        }
+
+        h1 {
+            color: #c44;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+        }
+
+        .cart-item div {
+            flex: 1;
+            text-align: left;
+            margin-left: 15px;
+        }
+
+        .cart-item button {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity button {
+            background-color: #28a745;
+        }
+
+        .total {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        /* Icon quay lại */
+        .back-icon {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: fill 0.3s ease-in-out;
+        }
+
+        .back-icon:hover {
+            fill: orange;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Icon quay lại -->
+        <a href="/products">
+            <svg class="back-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black">
+                <path d="M15.5 19l-7-7 7-7" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </a>
+
+        <h1>🛒 Giỏ hàng của bạn</h1>
+
+        <% if (cart.length === 0) { %>
+            <p>Giỏ hàng trống!</p>
+        <% } else { %>
+            <% cart.forEach((product) => { %>
+                <div class="cart-item">
+                    <img src="<%= product.image%>" alt="<%= product.name %>">
+                    <div>
+                        <strong><%= product.name %></strong> <br>
+                        <span><%= product.price.toLocaleString() %> VND</span>
+                    </div>
+                    <div class="quantity">
+                        <form action="/cart/update/<%= product._id %>?action=decrease" method="POST">
+                            <button type="submit">-</button>
+                        </form>
+                        <span><%= product.quantity %></span>
+                        <form action="/cart/update/<%= product._id %>?action=increase" method="POST">
+                            <button type="submit">+</button>
+                        </form>
+                    </div>
+                    <form action="/cart/remove/<%= product._id %>" method="POST">
+                        <button type="submit">🗑️</button>
+                    </form>
+                </div>
+            <% }) %>
+
+            <div class="total">Tổng tiền: <%= cart.reduce((sum, p) => sum + p.price * p.quantity, 0).toLocaleString() %> VND</div>
+        <% } %>
+    </div>
+</body>
+</html>
