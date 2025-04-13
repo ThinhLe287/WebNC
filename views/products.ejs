@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Danh sách sản phẩm</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        body {
+            display: block;
+            font-family: Arial, sans-serif;
+            color: #5a2c20;
+            background-color: #f7e7ce;
+        }
+
+        .container {
+            width: 100%;
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .product-list {
+            display: flex;
+            justify-content: flex-start;
+            gap: 50px;
+            align-items: center;
+            margin: 0 auto;
+            margin-left: 18%;
+            padding: 20px;
+            max-width: 1200px;
+            flex-flow: row wrap;
+        }
+
+        .product {
+            border: 1px solid #ddd;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            background-color: antiquewhite;
+            padding: 15px;
+            border-radius: 10px;
+            width: 200px;
+            height: 300px;
+            text-align: center;
+            position: relative;
+            transition: transform 0.3s ease-in-out;
+            display: none; /* Hide products by default */
+        }
+
+        .product.visible {
+            display: block; /* Show only filtered products */
+        }
+
+        .product:hover {
+            transform: scale(1.05);
+        }
+
+        .product img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .product-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .product-price {
+            color: #d9534f;
+            margin: 10px 0;
+        }
+
+        button {
+            background-color: #28a745;
+            margin-left: 10%;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out, background-color 0.3s ease;
+            transform: translateY(10px);
+        }
+
+        .product:hover button {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        button:hover {
+            background-color: #218838;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .slide-show {
+            height: 500px;
+            width: 90%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            margin: auto;
+            margin-bottom: 20px;
+        }
+
+        .list-images {
+            display: flex;
+            transition: 0.5s;
+        }
+
+        .btn:hover {
+            color: white;
+        }
+
+        .btn {
+            font-size: 45px;
+            color: #999;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: 0.5s;
+            cursor: pointer;
+        }
+
+        .btn-left {
+            left: 0;
+        }
+
+        .btn-right {
+            right: 0;
+        }
+
+        .index-images {
+            position: absolute;
+            bottom: 10px;
+            display: flex;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .index-item {
+            border: 2px solid #999;
+            padding: 10px;
+            margin: 3px;
+            border-radius: 50%;
+        }
+
+        .active {
+            background-color: #999;
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <div class="container">
+     <!-- Bộ lọc danh mục -->
+     <form id="category-filter" style="margin-bottom: 20px;">
+        <label for="category">Lọc theo danh mục:</label>
+        <select name="category" id="category" onchange="filterProducts()">
+            <option value="">Tất cả</option>
+            <option value="67cc541303b9eade9e63bd99">Cà phê Việt</option>
+            <option value="67cc541303b9eade9e63bd97">Cà phê Ý</option>
+            <option value="67f8db6d70626cd18ae07ea0">Trà trái cây</option>
+            <option value="67f8db8370626cd18ae07ea2">Khác</option>
+        </select>
+    </form>
+
+        <!-- Slide show -->
+        <div class="slide-show">
+            <div class="list-images">
+                <img src="/image/header1.jpg" width="100%" alt="">
+                <img src="/image/header2.jpg" width="100%" alt="">
+                <img src="/image/header3.jpg" width="100%" alt="">
+                <img src="/image/header4.jpg" width="100%" alt="">
+            </div>
+            <div class="btns">
+                <div class="btn-left btn"><i class='bx bx-chevron-left'></i></div>
+                <div class="btn-right btn"><i class='bx bx-chevron-right'></i></div>
+            </div>
+            <div class="index-images">
+                <div class="index-item index-item-0 active"></div>
+                <div class="index-item index-item-1"></div>
+                <div class="index-item index-item-2"></div>
+                <div class="index-item index-item-3"></div>
+            </div>
+        </div>
+
+        <h1>Danh sách sản phẩm</h1>
+        <br>
+         <!-- Danh sách sản phẩm -->
+         <div class="product-list">
+            <% if (products && products.length > 0) { %>
+                <% products.forEach((product) => { %>
+                    <div class="product visible" data-category="<%= product.category || 'unknown' %>">
+                        <a href="/products/<%= product._id %>">
+                            <img src="<%= product.image || '/image/default.jpg' %>" alt="<%= product.name %>">
+                        </a>
+                        <div class="product-title"><%= product.name %></div>
+                        <div class="product-price"><%= product.price ? product.price.toLocaleString() : 'Liên hệ' %> VND</div>
+                        <form action="/cart/add/<%= product._id %>" method="POST">
+                            <button type="submit">Thêm vào giỏ hàng</button>
+                        </form>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p>Không có sản phẩm nào trong danh mục này.</p>
+            <% } %>
+        </div>
+    </div>
+    <br>
+    <br>
+    <script>
+        const listImage = document.querySelector('.list-images');
+        const imgs = document.querySelectorAll('.list-images img');
+        const btnLeft = document.querySelector('.btn-left');
+        const btnRight = document.querySelector('.btn-right');
+        const indexItems = document.querySelectorAll('.index-item');
+
+        let current = 0;
+        let totalImages = imgs.length;
+
+        function updateSlide() {
+            let width = imgs[0].clientWidth;
+            listImage.style.transform = `translateX(-${width * current}px)`;
+            document.querySelector('.active').classList.remove('active');
+            indexItems[current].classList.add('active');
+        }
+
+        let autoSlide = setInterval(() => {
+            current = (current + 1) % totalImages;
+            updateSlide();
+        }, 4000);
+
+        btnRight.addEventListener('click', () => {
+            clearInterval(autoSlide);
+            current = (current + 1) % totalImages;
+            updateSlide();
+            autoSlide = setInterval(() => {
+                current = (current + 1) % totalImages;
+                updateSlide();
+            }, 4000);
+        });
+
+        btnLeft.addEventListener('click', () => {
+            clearInterval(autoSlide);
+            current = (current - 1 + totalImages) % totalImages;
+            updateSlide();
+            autoSlide = setInterval(() => {
+                current = (current + 1) % totalImages;
+                updateSlide();
+            }, 4000);
+        });
+
+        // Category filtering logic
+        const categorySelect = document.getElementById('category');
+        const products = document.querySelectorAll('.product');
+
+        function filterProducts() {
+            const selectedCategory = categorySelect.value;
+            products.forEach(product => {
+                const productCategory = product.getAttribute('data-category');
+                if (!selectedCategory || productCategory === selectedCategory) {
+                    product.classList.add('visible');
+                } else {
+                    product.classList.remove('visible');
+                }
+            });
+        }
+
+        // Initialize filtering on page load
+        filterProducts();
+
+        // Add event listener for category selection change
+        categorySelect.addEventListener('change', filterProducts);
+    </script>
+    <%- include('partials/footer') %>
+</body>
+</html>

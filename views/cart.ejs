@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ hàng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #5a2c20;
+            background-color: #f7e7ce;
+            text-align: center;
+            width: 100%;
+        }
+
+        .container {
+            width: 100%;
+            height: auto;
+            position: relative;
+        }
+
+        h1 {
+            color: #c44;
+            margin-top: 30px;
+        }
+        .emptycart {
+            font-size: 20px;
+            color: black;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            margin-left: 20px;
+        }
+
+        .cart-item div {
+            flex: 1;
+            text-align: left;
+            margin-left: 15px;
+        }
+
+        .cart-item button {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity button {
+            background-color: #28a745;
+        }
+
+        .total {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .remove {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+
+        form {
+            display: flex;
+            justify-content: right;
+        }
+        .pay {
+            background-color: transparent;
+            box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+            color: black;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            justify-content: end;
+            margin-right: 30px;
+            font-size: 15px;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Confirm before removing an item
+            document.querySelectorAll('.remove').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    if (!confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?')) {
+                        event.preventDefault();
+                    }
+                });
+            });
+
+            // Update total price dynamically
+            const updateTotal = () => {
+                const cartItems = document.querySelectorAll('.cart-item');
+                let total = 0;
+                cartItems.forEach(item => {
+                    const price = parseInt(item.querySelector('span:nth-child(3)').textContent.replace(/\D/g, ''));
+                    const quantity = parseInt(item.querySelector('.quantity span').textContent);
+                    total += price * quantity;
+                });
+                document.querySelector('.total').textContent = `Tổng tiền: ${total.toLocaleString()} VND`;
+            };
+
+            document.querySelectorAll('.quantity button').forEach(button => {
+                button.addEventListener('click', () => {
+                    setTimeout(updateTotal, 500); // Delay to wait for server response
+                });
+            });
+
+            // Confirm before checkout
+            const checkoutButton = document.querySelector('.pay');
+            if (checkoutButton) {
+                checkoutButton.addEventListener('click', (event) => {
+                    if (!confirm('Bạn có chắc chắn muốn thanh toán?')) {
+                        event.preventDefault();
+                    }
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <div class="container">
+        <!-- Icon quay lại -->
+
+        <h1>Giỏ hàng của bạn</h1>
+        <hr>
+
+        <% if (cart.length === 0) { %>
+            <p class="emptycart">Giỏ hàng trống!</p>
+        <% } else { %>
+            <% cart.forEach((product) => { %>
+                <div class="cart-item">
+                    <img src="<%= product.image %>" alt="<%= product.name %>">
+                    <div>
+                        <strong><%= product.name %></strong> <br>
+                        <span>Size: <%= product.newSize || 'Default' %></span> <br>
+                        <span><%= (product.newPrice || product.price).toLocaleString() %> VND</span>
+                    </div>
+                    <div class="quantity">
+                        <form action="/cart/update/<%= product._id %>?action=decrease" method="POST">
+                            <button type="submit">-</button>
+                        </form>
+                        <span><%= product.quantity %></span>
+                        <form action="/cart/update/<%= product._id %>?action=increase" method="POST">
+                            <button type="submit">+</button>
+                        </form>
+                    </div>
+                    <form action="/cart/remove/<%= product._id %>" method="POST">
+                        <button type="submit" class="remove"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                          </svg></button>
+                    </form>
+                </div>
+            <% }) %>
+
+            <div class="total">Tổng tiền: <%= cart.reduce((sum, p) => sum + (p.newPrice || p.price) * p.quantity, 0).toLocaleString() %> VND</div>
+            
+        <% } %>
+        <form action="/cart/checkout" method="POST">
+            <button type="submit" class="pay">Thanh toán</button>
+        </form>
+        <%- include('partials/footer') %>
+    </div>
+</body>
+</html>
