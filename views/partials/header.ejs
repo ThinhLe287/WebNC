@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <style>
+        
+        body{
+            font-family: sans-serif;
+            color: #222;
+        }
+        header {
+            display: flex;
+            flex-direction: column; /* Sắp xếp các phần tử theo cột */
+        }
+        nav{
+            display: flex;
+            flex-direction: column; /* Sắp xếp các phần tử trong nav theo cột */
+            align-items: center; /* Căn giữa các phần tử trong nav theo chiều ngang */
+            background-color: #f7e7ce;
+        }
+    
+        nav ul li a i{
+            margin: 10px;
+            height: 10px;
+        }
+        nav ul li a{
+            text-decoration: none;
+            color: black;
+            font-size: 15px;
+        }
+        nav ul li a:hover{
+            color: #d9534f;
+        }
+        nav ul {
+            list-style-type: none;
+            text-align: center;
+            display: flex;
+            justify-content: center; /* Căn giữa danh sách liên kết */
+        }
+        nav li{
+            box-shadow: 0px 9px 30px rgba(255, 149, 5, 0.3);
+            float: left;
+            width: 120px;
+            height: 40px;
+            line-height: 40px;
+        }
+        .cart-link {
+            position: relative;
+            display: flex;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            text-decoration: none;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Căn giữa nội dung trong thẻ a */
+            padding: 30px;
+        }
+
+        .cart-link i {
+            width: 100%;
+            align-content: right;
+        }
+
+        .cart-link:hover {
+            color: #d9534f;
+        }
+        .logo img {
+            width: 150px; /* Đặt chiều rộng của logo */
+            height: auto; /* Để chiều cao tự động theo tỷ lệ */
+        }
+        .logo {
+            display: flex;
+            align-items: center; /* Căn giữa theo chiều dọc */
+            justify-content: space-between; /* Đưa các phần tử về hai phía */
+            width: 100%;
+        }
+    
+        .logo img {
+            width: 150px; /* Kích thước logo */
+            height: auto; /* Giữ tỷ lệ hình ảnh */
+            margin-right: 10px; /* Tạo khoảng cách giữa logo và văn bản */
+        }
+    
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-left: 10px; /* Khoảng cách giữa logo và chữ */
+        }
+    
+        .nameshop {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0; /* Loại bỏ margin thừa */
+        }
+    
+        .slogan {
+            font-size: 14px;
+            margin: 0; /* Loại bỏ margin thừa */
+        }
+        .searchBox {
+            background: #2f3640;
+            height: 40px; /* Set the height of the search box */
+            border-radius: 40px;
+            padding: 0 10px; /* Add padding to prevent text from touching edges */
+            display: flex;
+            align-items: center; /* Vertically center items inside search box */
+            margin-right: auto;
+            margin-left: 20px;
+            width: 45px; /* Default width */
+            overflow: hidden;
+            position: relative;
+            transition: width 0.4s ease-in-out; /* Smooth transition for width */
+        }
+
+        .searchBox:hover {
+            width: 300px; /* Expanded width on hover */
+        }
+
+        .searchBox:hover > .searchInput {
+            width: 240px; /* Adjust the expanded width on hover */
+            padding: 0 10px;
+            transition: 0.4s;
+        }
+
+        .searchButton {
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #2f3640;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.4s;
+            position: absolute;
+            right: 10px;
+        }
+
+        .searchInput {
+            border: none;
+            background: none;
+            outline: none;
+            color: white;
+            font-size: 16px;
+            width: 100%; /* Allow input to take full width */
+            max-width: 180px; /* Prevent overflowing content */
+            box-sizing: border-box; /* Include padding in total width */
+            padding: 0 10px; /* Add padding to input text */
+            display: flex;
+            justify-content: flex-start; /* Align text to the left */
+            align-items: center; /* Vertically align the content */
+            height: 100%; /* Ensure the input takes full height of the search box */
+            line-height: 40px; /* Set line height to match the height of the search box */
+            white-space: nowrap; /* Prevent text from wrapping */
+            overflow: hidden; /* Hide overflow text */
+            text-overflow: ellipsis;
+            transition: width 0.4s ease-in-out; /* Smooth transition for input width */
+        }
+
+        @media screen and (max-width: 620px) {
+        .searchBox {
+            width: 200px; /* Adjust width for smaller screens */
+        }
+
+        .searchBox:hover > .searchInput {
+            width: 100%; /* Ensure input stays within the box on hover */
+            padding: 0 6px;
+        }
+    }
+
+
+        .account {
+            width: 100%;
+            padding-right: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Căn phải */
+            margin-top: 10px;
+            margin-bottom: 10px;
+            margin-right: 20px;
+        }
+        .account a {
+            text-decoration: none;
+            color: #333;
+            font-size: 15px;
+            margin: 0 10px; /* Khoảng cách giữa các liên kết */
+        }
+    
+    </style>
+    <header>
+        <div class="logo">
+            <a href="/products" class="img"><img src="/image/logo.png" alt="Logo"></a>
+            <div class="logo-text">
+                <p class="nameshop">Coffee Monster</p>
+                <p class="slogan">Your happiness is our joy</p>
+            </div>
+            <div class="searchBox">
+                <form method="get" action="/products">
+                    <input class="searchInput" type="text" name="search" placeholder="Search" value="<%= typeof search !== 'undefined' ? search : '' %>">
+                    <button class="searchButton" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <nav>
+            <ul>
+                <li><a href="/products" class="nav-product">Sản phẩm</a></li>
+                <li><a href="#" class="introduce">Giới thiệu</a></li>
+                <li><a href="#" class="contact">Liên hệ</a></li>
+                <li><a href="#" class="Q&A">Hỏi đáp</a></li>
+                <div class="dot"></div>
+            </ul>
+            <div class="cart-link">
+                <div class="account">
+                    <% if (user) { %>
+                        <span>👋 Xin chào, <%= user.name %></span>
+                        <a href="/logout">Logout</a>
+                    <% } else { %>
+                        <a href="/login" class="login">Login</a>
+                        <a href="/register" class="register">Register</a>
+                    <% } %>
+                </div>
+                
+                <a href="/cart" class="cart-link">
+                    <i class="fas fa-shopping-cart"></i>
+                </a>
+            </div>
+                    
+        </nav>      
+    </header>
+</body>
+</html>
+
+
+
+
