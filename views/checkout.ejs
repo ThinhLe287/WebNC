@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout</title>
+  <link href="https://fonts.googleapis.com/css2?family=Electrolize&display=swap" rel="stylesheet">
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f7e7ce;
+        color: #333;
+    }
+
+    h1 {
+        text-align: center;
+        margin-top: 20px;
+        color: black   ;
+    }
+
+    .required {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    .container {
+        display: block;
+        width: 100%;
+        font-size: 18px;
+        max-width: 600px;
+        padding: 20px;
+        background-color: #dfaf6b;
+        border-radius: 50px 0 50px 0;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="number"] {
+        width: 80%;
+        padding: 10px;
+        margin: 10px 0;
+        background-color: transparent;
+        border: 1px solid #fff;
+        border-radius: 5px;
+        color: white;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: black;
+    }
+
+    label {
+        margin-top: 10px;
+        display: block;
+    }
+
+    select {
+        border: none;
+        background-color: rgba(255,255,255,0.1);
+        color: white;
+        margin-right: 10px;
+        padding: 5px;
+        border-radius: 5px;
+    }
+
+    option {
+        color: black;
+    }
+
+    #bank-card-form {
+        display: none;
+        margin-top: 20px;
+    }
+
+    .card-number,
+    .card-name,
+    .card-cvc,
+    .select-date {
+        margin-bottom: 15px;
+    }
+
+    .card-cvc input,
+    .card-number input,
+    .card-name input {
+        background-color: transparent;
+        border: none;
+        border-bottom: 1px solid #fff;
+        color: #fff;
+        width: 100%;
+        font-size: 16px;
+    }
+
+    button,
+    .buy-button {
+        font-family: 'Electrolize', sans-serif;
+        margin-top: 20px;
+        padding: 12px 25px;
+        background-color: #FFAB40;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover,
+    .buy-button:hover {
+        background-color: #66BB6A;
+    }
+    input[type="radio"] {
+        justify-content: center;
+        text-align: center;
+        margin: 10px 0;
+        cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <%- include('partials/header') %>
+
+  <h1>Checkout</h1>
+  <% if (errorMessage) { %>
+    <p class="required"><%= errorMessage %></p>
+  <% } %>
+
+  <form action="/cart/checkout" method="POST">
+    <div class="container">
+      <input type="text" name="name" placeholder="Họ và tên" required>
+      <input type="text" name="address" placeholder="Địa chỉ" required>
+      <input type="text" name="phone" placeholder="Số điện thoại" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="text" name="note" placeholder="Ghi chú (nếu có)">
+
+      <label for="paymentMethod">Phương thức thanh toán:</label>
+      <input type="radio" name="paymentMethod" value="cod" checked> Thanh toán khi nhận hàng<br>
+      <input type="radio" name="paymentMethod" value="bankTransfer"> Chuyển khoản ngân hàng<br>
+
+      <!-- FORM thông tin thẻ ngân hàng -->
+      <div id="bank-card-form">
+        <div class="card-number">
+          <label for="number">Số thẻ</label>
+          <input id="number" type="text" name="cardNumber" placeholder="1234 1234 1234 1234" />
+        </div>
+
+        <div class="card-name">
+          <label for="name">Tên chủ thẻ</label>
+          <input id="name" type="text" name="cardName" placeholder="Your Name" />
+        </div>
+
+        <div class="select-date">
+          <label>Ngày hết hạn</label>
+          <select name="expMonth">
+            <option value="">Tháng</option>
+            <% for (let i = 1; i <= 12; i++) { %>
+              <option value="<%= i %>"><%= i.toString().padStart(2, '0') %></option>
+            <% } %>
+          </select>
+          <select name="expYear">
+            <% for (let year = 2024; year <= 2030; year++) { %>
+              <option value="<%= year %>"><%= year %></option>
+            <% } %>
+          </select>
+        </div>
+
+        <div class="card-cvc">
+          <label for="cvc">CVV</label>
+          <input id="cvc" type="text" name="cvc" placeholder="123" />
+        </div>
+      </div>
+
+      <button href="checkoutSuccess" type="submit">Đặt hàng</button>
+    </div>
+  </form>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const codRadio = document.querySelector('input[value="cod"]');
+      const bankRadio = document.querySelector('input[value="bankTransfer"]');
+      const cardForm = document.getElementById('bank-card-form');
+
+      function toggleCardForm() {
+        cardForm.style.display = bankRadio.checked ? 'block' : 'none';
+      }
+
+      toggleCardForm(); // Gọi khi trang load
+
+      codRadio.addEventListener('change', toggleCardForm);
+      bankRadio.addEventListener('change', toggleCardForm);
+    });
+  </script>
+</body>
+</html>

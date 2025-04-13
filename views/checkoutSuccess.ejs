@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Đặt hàng thành công</title>
+  <link href="https://fonts.googleapis.com/css2?family=Electrolize&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Electrolize', sans-serif;
+      background-image: url(http://www.newhdwallpapers.in/wp-content/uploads/2014/04/Dandelion-at-Sunset-Nature-HD-Wallpaper.jpg);
+      background-size: cover;
+      background-position: center;
+      color: white;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 30px;
+      background-color: rgba(0, 0, 0, 0.75);
+      border-radius: 30px;
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.8);
+      text-align: center;
+    }
+
+    h1 {
+      color: #FFEB3B;
+      font-size: 28px;
+    }
+
+    p, li, h3 {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    a.button {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 12px 25px;
+      background-color: #FFAB40;
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      color: white;
+      font-size: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      transition: background-color 0.3s ease;
+    }
+
+    a.button:hover {
+      background-color: #66BB6A;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🎉 Cảm ơn bạn đã đặt hàng!</h1>
+    <p><strong>Tên khách hàng:</strong> <%= order.customer.name %></p>
+    <p><strong>Email:</strong> <%= order.customer.email %></p>
+    <p><strong>Địa chỉ giao hàng:</strong> <%= order.address %></p>
+    <p><strong>Phương thức thanh toán:</strong>
+      <%= order.paymentMethod === 'cod' ? 'Thanh toán khi nhận hàng (COD)' :
+          order.paymentMethod === 'bankTransfer' ? 'Chuyển khoản ngân hàng' :
+          order.paymentMethod %>
+    </p>
+
+    <h3>Sản phẩm đã mua:</h3>
+    <ul>
+      <% order.items.forEach(item => { %>
+        <li><%= item.name %> - SL: <%= item.quantity %> - Giá: <%= item.price %> VND</li>
+      <% }) %>
+    </ul>
+
+    <h3>Tổng tiền: <%= order.total %> VND</h3>
+
+    <a class="button" href="/products">🛍 Quay lại trang sản phẩm</a>
+  </div>
+
+</body>
+</html>
